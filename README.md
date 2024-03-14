@@ -34,7 +34,23 @@ The TA will check the completion of the following tasks:
 Each member of the group should be able to answer all of the following questions. The TA will ask each person one question selected at random, and the student must be able to answer the question to get credit for the lab.
 
 - Q1: How to check which Node a Pod is running on? Use an example to show where this information can be found.
+  - kubectl get pods -o wide
+    
 - Q2: How to scale a ReplicaSet? Use an example to demonstrate scaling a ReplicaSet to 3 replicas.
+  - kubectl scale --replicas=3 -f nginx_replicaset.yaml
+    
 - Q3: Briefly describe the process of a deployment rolling update, i.e., how are new version of pods created and how are old version of pods terminated. Which configurations can control the pods being created or deleted in parallel?
+  - kubectl set image  deployments/nginx-deployment nginx=nginx:1.9.1
+    - nginx_test.yml
+      strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1 # How many created in parallel
+        maxUnavailable: 1 # How many pods can be destroyed for the creation
+    
 - Q4: Inside the Kubernetes cluster, how to access a service named "svc1" offering HTTP service at Port 8000?
-- Q5: What is an Ingress in Kubernetes? What type of resources does an Ingress configuration typically point to as its backend? 
+  - Can use the service's DNS name. Assuming the service is in the same namespace, you can access it at http://svc1:8000. If the service is in a different namespace, you can access it at 
+    http://svc1.namespace.svc.cluster.local:8000, replacing namespace with the actual namespace of the service.
+
+- Q5: What is an Ingress in Kubernetes? What type of resources does an Ingress configuration typically point to as its backend?
+  - Access resources outside the Kubernetes cluster. Services example: LoadBalancer.
